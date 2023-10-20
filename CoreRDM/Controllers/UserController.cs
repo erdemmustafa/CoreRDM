@@ -21,7 +21,7 @@ namespace CoreRDM.Controllers
             var response = _userService.Authenticate(model);
 
             if (response == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+                return BadRequest(new { message = "Kullanıcı adı veya şifre hatalı " });
 
             return Ok(response);
         }
