@@ -10,7 +10,8 @@ namespace CoreRDM.Helpers
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var user = (User)context.HttpContext.Items["User"];
+            var user = (Users)context.HttpContext.Items["User"];
+            var expirydate = context.HttpContext.Items["expiry"];
             if (user == null)
             {
                 // not logged in

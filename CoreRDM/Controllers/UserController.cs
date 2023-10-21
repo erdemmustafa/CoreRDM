@@ -1,6 +1,5 @@
 ﻿using CoreRDM.Models;
 using CoreRDM.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreRDM.Controllers
@@ -10,15 +9,19 @@ namespace CoreRDM.Controllers
     public class UserController : ControllerBase
     {
         private IUserService _userService;
+        private readonly NHibernate.ISession _session;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, NHibernate.ISession session)
         {
             _userService = userService;
+            _session = session;
         }
-        [HttpPost("authenticate")]
+        [HttpPost("GetToken")]
         public IActionResult Authenticate(AuthenticateRequest model)
         {
+            
             var response = _userService.Authenticate(model);
+            
 
             if (response == null)
                 return BadRequest(new { message = "Kullanıcı adı veya şifre hatalı " });

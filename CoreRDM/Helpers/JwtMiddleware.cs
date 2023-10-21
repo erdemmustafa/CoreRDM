@@ -1,4 +1,6 @@
-﻿using CoreRDM.Services;
+﻿using CoreRDM.Entities;
+using CoreRDM.Services;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -45,9 +47,9 @@ namespace CoreRDM.Helpers
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
-
                 // attach user to context on successful jwt validation
-                context.Items["User"] = userService.GetById(userId);
+                context.Items["User"] = (Users)userService.GetById(userId);
+                context.Items["expiry"] = (string)jwtToken.Claims.First(x => x.Type == "expiry").Value;
             }
             catch
             {

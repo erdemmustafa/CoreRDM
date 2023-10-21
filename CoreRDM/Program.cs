@@ -1,10 +1,17 @@
-﻿using CoreRDM.Helpers;
+﻿using CoreRDM.Entities;
+using CoreRDM.Helpers;
+using CoreRDM.Mapping;
 using CoreRDM.Services;
 using FluentNHibernate.Cfg;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NHibernate;
 using NHibernate.Id.Insert;
 using System.Configuration;
+using System.Data.SqlClient;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +27,22 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddScoped<IUserService, UserService>();
 }
 
-
+builder.Services.AddSingleton<NHibernate.ISessionFactory>(factory =>
+{
+    return Fluently.Configure()
+    .Database(
+        () =>
+        {
+            return FluentNHibernate.Cfg.Db.MsSqlConfiguration.MsSql2012
+            .ShowSql()
+            .ConnectionString(builder.Configuration.GetConnectionString("SqlConnection"));
+        }
+    )
+    .Mappings(z => z.FluentMappings.AddFromAssembly(System.Reflection.Assembly.GetExecutingAssembly()))
+    .BuildSessionFactory();
+}
+);
+builder.Services.AddSingleton<NHibernate.ISession>(factory => factory.GetServices<ISessionFactory>().First().OpenSession());
 
 
 builder.Services.AddControllers();
