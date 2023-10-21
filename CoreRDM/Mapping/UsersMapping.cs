@@ -7,12 +7,13 @@ namespace CoreRDM.Mapping
     {
         public UsersMapping()
         {
+            Schema("RdmFlow.dbo");
             Table("Users");
-            Id(x => x.Id);
-            Map(x => x.Username).Column("Username");
+            Id(x => x.User_Id);
+            Map(x => x.UserCode).Column("UserCode");
             Map(x => x.Password).Column("Password");
-            Map(x => x.FirstName).Column("PersonName");
-            Map(x => x.LastName).Column("PersonSurname");
+            Map(x => x.Name).Column("Name");
+            Map(x => x.SurName).Column("SurName");
         }
     }
 }

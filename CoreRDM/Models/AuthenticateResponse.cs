@@ -19,10 +19,10 @@ namespace CoreRDM.Models
 
         public AuthenticateResponse(Users user, string token)
         {
-            Id = user.Id;
-            FirstName = user.FirstName;
-            LastName = user.LastName;
-            Username = user.Username;
+            Id = user.User_Id;
+            FirstName = user.Name;
+            LastName = user.SurName;
+            Username = user.UserCode;
             Password = user.Password;
             Token = token;
             Role = user.Roles;

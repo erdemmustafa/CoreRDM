@@ -34,6 +34,7 @@ builder.Services.AddSingleton<NHibernate.ISessionFactory>(factory =>
         () =>
         {
             return FluentNHibernate.Cfg.Db.MsSqlConfiguration.MsSql2012
+            .DefaultSchema("dbo")
             .ShowSql()
             .ConnectionString(builder.Configuration.GetConnectionString("SqlConnection"));
         }

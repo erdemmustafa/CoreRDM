@@ -32,7 +32,7 @@ namespace CoreRDM.Services
 
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
-            var user = _session.Query<Users>().Where(x => x.Username == model.Username && x.Password == model.Password).SingleOrDefault();
+            var user = _session.Query<Users>().Where(x => x.UserCode == model.Username && x.Password == model.Password).SingleOrDefault();
 
             // return null if user not found
             if (user == null) return null;
@@ -49,7 +49,7 @@ namespace CoreRDM.Services
 
         public Users GetById(int id)
         {
-            return _session.Query<Users>().FirstOrDefault(x => x.Id == id);
+            return _session.Query<Users>().FirstOrDefault(x => x.User_Id == id);
         }
 
         // helper methods
@@ -63,7 +63,7 @@ namespace CoreRDM.Services
             {
                 Subject = new ClaimsIdentity(
                     new[] {
-                        new Claim("id", user.Id.ToString()),
+                        new Claim("id", user.User_Id.ToString()),
                         new Claim("expiry", DateTime.Now.AddDays(1).ToString()
                         )
             }),
