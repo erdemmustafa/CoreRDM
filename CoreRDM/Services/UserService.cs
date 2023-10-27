@@ -20,7 +20,7 @@ namespace CoreRDM.Services
     public class UserService : IUserService
     {
         private readonly NHibernate.ISession _session;
-
+        private string Expire_date;
 
         private readonly AppSettings _appSettings;
 
@@ -33,13 +33,19 @@ namespace CoreRDM.Services
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
             var user = _session.Query<Users>().Where(x => x.UserCode == model.Username && x.Password == model.Password).SingleOrDefault();
-
+            string? token;
             // return null if user not found
-            if (user == null) return null;
+            if (user == null)
+            {
+                return new AuthenticateResponse(new Users() { Message = "Kullanıcı Adı şifre bilgileri hatalı" }, "", "");
+            }
+            else
+            {
+                token = generateJwtToken(user);
 
+            }
             // authentication successful so generate jwt token
-            var token = generateJwtToken(user);
-            return new AuthenticateResponse(user, token);
+            return new AuthenticateResponse(user, token, Expire_date);
         }
 
         public IEnumerable<Users> GetAll()
@@ -59,17 +65,22 @@ namespace CoreRDM.Services
             // generate token that is valid for 1 days
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var authClaims = new List<Claim>();
+
+            foreach (var item in user.Roles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, item.Name));
+
+            }
+            authClaims.Add(new Claim("id", user.User_Id.ToString()));
+            authClaims.Add(new Claim("expiry", DateTime.Now.AddDays(1).ToString()));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(
-                    new[] {
-                        new Claim("id", user.User_Id.ToString()),
-                        new Claim("expiry", DateTime.Now.AddDays(1).ToString()
-                        )
-            }),
+                Subject = new ClaimsIdentity(authClaims),
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+            Expire_date = tokenDescriptor.Expires.ToString();
             var tokenExp = tokenDescriptor.Expires;
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);

@@ -17,7 +17,7 @@ namespace CoreRDM.Models
         public string Message { get; set; }
 
 
-        public AuthenticateResponse(Users user, string token)
+        public AuthenticateResponse(Users user, string token,string Expire)
         {
             Id = user.User_Id;
             FirstName = user.Name;
@@ -26,7 +26,7 @@ namespace CoreRDM.Models
             Password = user.Password;
             Token = token;
             Role = user.Roles;
-            ExpiryDate = System.DateTime.Now.ToString();
+            ExpiryDate = Expire;
             Message = user.Message;
         }
     }

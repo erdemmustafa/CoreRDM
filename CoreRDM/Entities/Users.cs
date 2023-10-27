@@ -15,6 +15,6 @@ namespace CoreRDM.Entities
         public virtual string? Email { get; set; }
 
         public virtual string? Gsm { get; set; }
-        public virtual List<Role> Roles { get; set; }
+        public virtual List<Role>? Roles { get; set; }
     }
 }
