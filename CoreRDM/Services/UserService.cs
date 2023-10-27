@@ -33,6 +33,9 @@ namespace CoreRDM.Services
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
             var user = _session.Query<Users>().Where(x => x.UserCode == model.Username && x.Password == model.Password).SingleOrDefault();
+            var RoleList = _session.Query<UserRoleMapping>().Where(x => x.User_Id == user.User_Id).ToList();
+            var roles = _session.Query<Role>().Where(x => x.Id == 1);
+            
             string? token;
             // return null if user not found
             if (user == null)
@@ -67,11 +70,7 @@ namespace CoreRDM.Services
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var authClaims = new List<Claim>();
 
-            foreach (var item in user.Roles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, item.Name));
-
-            }
+         
             authClaims.Add(new Claim("id", user.User_Id.ToString()));
             authClaims.Add(new Claim("expiry", DateTime.Now.AddDays(1).ToString()));
             var tokenDescriptor = new SecurityTokenDescriptor

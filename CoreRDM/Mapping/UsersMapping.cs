@@ -14,6 +14,8 @@ namespace CoreRDM.Mapping
             Map(x => x.Password).Column("Password");
             Map(x => x.Name).Column("Name");
             Map(x => x.SurName).Column("SurName");
+            Map(x => x.Email).Column("Email");
+            Map(x => x.Gsm).Column("GSM");
         }
     }
 }
