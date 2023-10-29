@@ -25,7 +25,7 @@ namespace CoreRDM.Models
             Username = user.UserCode;
             Password = user.Password;
             Token = token;
-            Role = user.Roles.ToList();
+            Role = user.Roles?.ToList();
             ExpiryDate = Expire;
             Message = user.Message;
         }

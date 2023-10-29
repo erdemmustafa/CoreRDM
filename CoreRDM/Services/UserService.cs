@@ -33,8 +33,7 @@ namespace CoreRDM.Services
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
             var user = _session.Query<Users>().Where(x => x.UserCode == model.Username && x.Password == model.Password).SingleOrDefault();
-            var RoleList = _session.Query<UserRoleMapping>().Where(x => x.User_Id == user.User_Id).ToList();
-            var roles = _session.Query<Role>().Where(x => x.Id == 1);
+   
             
             string? token;
             // return null if user not found
@@ -44,6 +43,8 @@ namespace CoreRDM.Services
             }
             else
             {
+                var RoleList = _session.Query<UserRoleMapping>().Where(x => x.User_Id == user.User_Id).ToList();
+                var roles = _session.Query<Role>().Where(x => x.Id == 1);
                 token = generateJwtToken(user);
 
             }
