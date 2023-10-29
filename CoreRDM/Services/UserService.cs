@@ -4,6 +4,7 @@ using CoreRDM.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NHibernate;
+using NHibernate.Criterion;
 using NHibernate.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -44,7 +45,7 @@ namespace CoreRDM.Services
             else
             {
                 var RoleList = _session.Query<UserRoleMapping>().Where(x => x.User_Id == user.User_Id).ToList();
-                var roles = _session.Query<Role>().Where(x => x.Id == 1);
+                var roles = _session.QueryOver<Role>().Where(x => x.Id.IsIn());
                 token = generateJwtToken(user);
 
             }
