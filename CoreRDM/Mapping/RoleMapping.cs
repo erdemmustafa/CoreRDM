@@ -9,8 +9,9 @@ namespace CoreRDM.Mapping
         {
             Schema("RdmFlow.dbo");
             Table("Roles");
-            Id(x=>x.Id);
+            Id(x=>x.Id).Column("Id");
             Map(x => x.Name).Column("Name");
+            References(x => x.RoleMapping).Column("Id").ReadOnly().LazyLoad();
 
         }
     }

@@ -19,9 +19,9 @@ namespace CoreRDM.Controllers
         [HttpPost("GetToken")]
         public IActionResult Authenticate(AuthenticateRequest model)
         {
-            
+
             var response = _userService.Authenticate(model);
-            
+
 
             if (response == null)
                 return BadRequest(new { message = "Kullanıcı adı veya şifre hatalı " });
